@@ -1,50 +1,71 @@
-import sys
-import pygame
+import pygame,sys
 
 pygame.init()
-window = pygame.display.set_mode((800, 800))
-clock = pygame.time.Clock()
-pygame.display.set_caption("Block")
+Clock = pygame.time.Clock()
+FPS = 60
+size = [1000,800]
+bg = [0,0,0]
+screen = pygame.display.set_mode(size)
+pygame.display.set_caption('Movement')
 
-rect = pygame.Rect(0, 0, 20, 20)
-en = pygame.Rect(200,10, 100,50)
-rect.center = window.get_rect().center
-vel = 5
 
-def initate():
-    pygame.draw.rect(window, (255, 0, 0), rect)
-    pygame.draw.rect(window, (0, 255, 0), en)
-
-def movement():
-    keys = pygame.key.get_pressed()
-    
-    rect.x += (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * vel
-    rect.y += (keys[pygame.K_DOWN] - keys[pygame.K_UP]) * vel
+class Player:
+    def __init__(self,vel,x,y):
+        self.vel = vel
         
-    rect.centerx = rect.centerx % window.get_width()
-    rect.centery = rect.centery % window.get_height()
+        self.x = x
+        self.y = y
+        self.jump = False
 
+    def move(self):
+        k = pygame.key.get_pressed()
+        if k[pygame.K_a]:
+            self.x -= self.vel
+        if k[pygame.K_d]:
+            self.x += self.vel
+        if k[pygame.K_w]:
+            self.y -= self.vel
+        if k[pygame.K_s]:
+            self.y += self.vel
+  
 
-run = True
-while run:
-    clock.tick(60)
+    def draw(self):
+        pygame.draw.rect(screen,"red",(self.x,self.y,50,50))
+
+    def bordercollsion(self):
+        if self.x <=0:
+            self.x=0
+        if self.x >=950:
+            self.x=950
+        if self.y <=0:
+            self.y=0
+        if self.y >=750:
+            self.y=750
+        
+        
+
+    def do(self):
+        self.move()
+        self.draw()
+        self.bordercollsion()
+        
+    
+
+player = Player(1,500,600)
+
+while True:
+    screen.fill(bg)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            run = False
+            sys.exit()
         if event.type == pygame.KEYDOWN:
             print(pygame.key.name(event.key))
             if event.key == pygame.K_ESCAPE:
                 run = False
                 pygame.quit
                 sys.exit()
-                
-
-
-
-    window.fill(0)
-
-    #Do stuff here that you wnant to be infront of the game:
-    movement() #movement
-    initate() #should be used for the initiation of stuff
-    pygame.display.flip()
-
+        
+    player.do()
+    en = pygame.draw.rect(screen,"blue",(10,20,50,50))
+    pygame.display.update()
+    
