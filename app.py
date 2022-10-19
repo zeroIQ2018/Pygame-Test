@@ -9,28 +9,45 @@ screen = pygame.display.set_mode(size)
 pygame.display.set_caption('Movement')
 
 
+class Buscemi(): 
+
+    
+    def draw(self):                                             
+        return pygame.draw.rect(screen,"blue",(100,80,1000,50))    
+
+
 class Player:
-    def __init__(self,vel,x,y):
+    def __init__(self,vel,x,y,buscemi): 
         self.vel = vel
-        
+        self.buscemi=buscemi
+
         self.x = x
         self.y = y
+        self.xold = None    
+        self.yold = None    
         self.jump = False
+        self.draw()     
 
     def move(self):
-        k = pygame.key.get_pressed()
-        if k[pygame.K_a]:
-            self.x -= self.vel
-        if k[pygame.K_d]:
-            self.x += self.vel
-        if k[pygame.K_w]:
-            self.y -= self.vel
-        if k[pygame.K_s]:
-            self.y += self.vel
+        if not self.dude.colliderect(self.buscemi.draw()):  
+            k = pygame.key.get_pressed()
+            self.xold = self.x  
+            self.yold = self.y  
+            if k[pygame.K_a]:
+                self.x -= self.vel
+            if k[pygame.K_d]:
+                self.x += self.vel
+            if k[pygame.K_w]:
+                self.y -= self.vel
+            if k[pygame.K_s]:
+                self.y += self.vel
+        else:   
+            self.x = self.xold  
+            self.y = self.yold  
   
 
     def draw(self):
-        pygame.draw.rect(screen,"red",(self.x,self.y,50,50))
+        self.dude = pygame.draw.rect(screen,"red",(self.x,self.y,50,50))    
 
     def bordercollsion(self):
         if self.x <=0:
@@ -51,7 +68,8 @@ class Player:
         
     
 
-player = Player(1,500,600)
+en = Buscemi()  
+player = Player(1,500,600,en)   
 
 while True:
     screen.fill(bg)
@@ -65,7 +83,6 @@ while True:
                 pygame.quit
                 sys.exit()
         
+
     player.do()
-    en = pygame.draw.rect(screen,"blue",(10,20,50,50))
     pygame.display.update()
-    
