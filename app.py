@@ -1,5 +1,6 @@
 import pygame,sys
 
+
 pygame.init()
 Clock = pygame.time.Clock()
 FPS = 60
@@ -15,6 +16,18 @@ class Buscemi():
     def draw(self):                                             
         return pygame.draw.rect(screen,"blue",(100,80,1000,50))    
 
+  
+
+class bullet():
+    
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+
+    def draw(self,x,y):
+        pygame.draw.rect(screen,"white",(y,x,1,3))
+
+
 
 class Player:
     def __init__(self,vel,x,y,buscemi): 
@@ -29,17 +42,19 @@ class Player:
         self.draw()     
 
     def move(self):
-        if not self.dude.colliderect(self.buscemi.draw()):  
-            k = pygame.key.get_pressed()
+        k = pygame.key.get_pressed()
+
+
+        if not self.dude.colliderect(self.buscemi.draw()):
             self.xold = self.x  
             self.yold = self.y  
-            if k[pygame.K_a]:
+            if k[pygame.K_a] or k[pygame.K_LEFT]:
                 self.x -= self.vel
-            if k[pygame.K_d]:
+            if k[pygame.K_d] or k[pygame.K_RIGHT]:
                 self.x += self.vel
-            if k[pygame.K_w]:
+            if k[pygame.K_w] or k[pygame.K_UP]:
                 self.y -= self.vel
-            if k[pygame.K_s]:
+            if k[pygame.K_s] or k[pygame.K_DOWN]:
                 self.y += self.vel
         else:   
             self.x = self.xold  
@@ -69,7 +84,7 @@ class Player:
     
 
 en = Buscemi()  
-player = Player(1,500,600,en)   
+player = Player(.5,500,600,en)   
 
 while True:
     screen.fill(bg)
